@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(<YOUR_VENV_PATH>/bin/python <YOUR_PROJECT_PATH>/speak.py:*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay <YOUR_PROJECT_PATH>/outputs/notification.wav &",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay <YOUR_PROJECT_PATH>/outputs/permission.wav &",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

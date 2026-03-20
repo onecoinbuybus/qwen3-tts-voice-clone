@@ -1,0 +1,18 @@
+# Models
+models/
+
+# Audio files
+voices/*.wav
+outputs/
+temp_speak/
+clone_output/
+custom_output/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# OS
+.DS_Store
