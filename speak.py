@@ -23,8 +23,8 @@ warnings.filterwarnings("ignore")
 def main():
     parser = argparse.ArgumentParser(description="Quick TTS with voice cloning")
     parser.add_argument("text", nargs="?", help="Text to speak")
-    parser.add_argument("--volume", "-v", type=float, default=2.0,
-                        help="Playback volume multiplier (default: 2.0)")
+    parser.add_argument("--volume", "-v", type=float, default=5.0,
+                        help="Playback volume multiplier (default: 5.0)")
     parser.add_argument("--voice", type=str, default=None,
                         help="Voice name from voices/ directory (default: chihaya_bilibili)")
     parser.add_argument("--ref-text", type=str, default=None,
