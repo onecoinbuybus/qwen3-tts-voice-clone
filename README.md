@@ -1,163 +1,207 @@
-# Qwen3-TTS Voice Clone
+# Qwen3-TTS for Mac - Run AI Text-to-Speech Locally on Apple Silicon
 
-基于 [Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) + [MLX](https://github.com/ml-explore/mlx) 的本地语音克隆工具，专为 Apple Silicon Mac 优化。
+Run **Qwen3-TTS** text-to-speech AI locally on your MacBook with Apple Silicon (M1, M2, M3, M4). No cloud, no API keys, completely offline.
 
-用一段参考音频克隆任意声音，生成中文语音。支持与 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 集成，实现任务完成后自动语音播报。
+**Keywords:** Qwen TTS Mac, Qwen3 TTS Apple Silicon, MLX text to speech, local TTS Mac, voice cloning Mac, AI voice generator MacBook
 
-## 功能
+---
 
-- **Voice Cloning** — 用参考音频克隆声音，生成任意中文文本的语音
-- **CustomVoice** — 用预设声音 + 风格指令生成语音（无需参考音频）
-- **Claude Code 集成** — 任务完成自动语音播报 + 权限确认提示音
+## Features
 
-## 硬件要求
+- **Voice Cloning** - Clone any voice from a 5-second audio sample
+- **Voice Design** - Create new voices by describing them ("deep narrator", "excited child")
+- **Custom Voices** - 9 built-in voices with emotion and speed control
+- **100% Local** - Runs entirely on your Mac, no internet required
+- **Optimized for M-Series** - Uses Apple's MLX framework for fast GPU inference
 
-- Apple Silicon Mac（M1/M2/M3/M4）
-- 建议 16GB+ 内存（8bit 量化模型约需 2-3GB）
-- 测试环境：M4 MacBook Air 32GB
+---
 
-## 安装
+## Why MLX Models?
 
-### 1. 克隆仓库
+MLX models are specifically optimized for Apple Silicon. Compared to running standard PyTorch models:
+
+| Metric | Standard Model | MLX Model |
+|--------|----------------|-----------|
+| **RAM Usage** | 10+ GB | 2-3 GB |
+| **CPU Temperature** | 80-90°C | 40-50°C |
+
+*Tested on M4 MacBook Air (fanless) with 1.7B models*
+
+MLX runs natively on the Apple Neural Engine and GPU, meaning better performance with less heat and battery drain.
+
+---
+
+## Quick Start (5 Minutes)
+
+### 1. Clone and setup
 
 ```bash
-git clone https://github.com/onecoinbuybus/qwen3-tts-voice-clone.git
-cd qwen3-tts-voice-clone
-```
-
-### 2. 创建虚拟环境
-
-```bash
-python3.13 -m venv .venv
+git clone https://github.com/kapi2800/qwen3-tts-apple-silicon.git
+cd qwen3-tts-apple-silicon
+python3 -m venv .venv
 source .venv/bin/activate
-```
-
-### 3. 安装依赖
-
-```bash
 pip install -r requirements.txt
-```
-
-### 4. 安装 ffmpeg
-
-```bash
 brew install ffmpeg
 ```
 
-### 5. 下载模型
+### 2. Download models
+
+Pick the models you need from the table below. Click the link, then click "Download" on HuggingFace.
+
+**Pro Models (1.7B) - Best Quality**
+
+| Model | Use Case | Download |
+|-------|----------|----------|
+| CustomVoice | Preset voices + emotion control | [Download](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit) |
+| VoiceDesign | Create voices from text description | [Download](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-8bit) |
+| Base | Voice cloning from audio | [Download](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-1.7B-Base-8bit) |
+
+**Lite Models (0.6B) - Faster, Less RAM**
+
+| Model | Use Case | Download |
+|-------|----------|----------|
+| CustomVoice | Preset voices + emotion control | [Download](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-0.6B-CustomVoice-8bit) |
+| VoiceDesign | Create voices from text description | [Download](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-0.6B-VoiceDesign-8bit) |
+| Base | Voice cloning from audio | [Download](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-0.6B-Base-8bit) |
+
+Put downloaded folders in `models/`:
+```
+models/
+├── Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit/
+├── Qwen3-TTS-12Hz-1.7B-VoiceDesign-8bit/
+└── Qwen3-TTS-12Hz-1.7B-Base-8bit/
+```
+
+### 3. Run
 
 ```bash
-mkdir -p models
-# Voice Cloning（Base 模型）
-huggingface-cli download Qwen/Qwen3-TTS-12Hz-1.7B-Base-8bit --local-dir models/Qwen3-TTS-12Hz-1.7B-Base-8bit
-
-# CustomVoice（可选）
-huggingface-cli download Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit --local-dir models/Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit
+source .venv/bin/activate
+python main.py
 ```
 
-## 参考音频准备
+---
 
-Voice Cloning 需要一段参考音频（`.wav`），建议：
+## Usage
 
-1. 从 Bilibili / YouTube 下载含目标声音的视频
-2. 用 `ffmpeg` 提取并裁剪音频（5-15 秒，纯语音，无背景音乐）：
+```
+========================================
+ Qwen3-TTS Manager
+========================================
+
+  Pro Models (1.7B - Best Quality)
+  ---------------------------------
+  1. Custom Voice
+  2. Voice Design
+  3. Voice Cloning
+
+  Lite Models (0.6B - Faster)
+  ---------------------------
+  4. Custom Voice
+  5. Voice Design
+  6. Voice Cloning
+
+  q. Exit
+
+Select: 
+```
+
+- **Custom Voice**: Pick from preset speakers, set emotion and speed
+- **Voice Design**: Describe a voice (e.g., "calm British narrator")
+- **Voice Cloning**: Provide a reference audio clip to clone
+
+---
+
+## speak.py - Quick CLI for Voice Cloning
+
+`speak.py` is a lightweight script that generates and plays cloned speech in one command. Great for notifications, reminders, or integrating TTS into other tools.
 
 ```bash
-# 下载（用 yt-dlp）
-yt-dlp -x --audio-format wav -o "raw.wav" "https://www.bilibili.com/video/..."
+# Basic usage
+python speak.py "你好世界"
 
-# 裁剪（例如取 1:30 到 1:45）
-ffmpeg -i raw.wav -ss 00:01:30 -to 00:01:45 -ac 1 -ar 24000 voices/reference.wav
+# Adjust volume (default: 2.0)
+python speak.py "声音大一点！" --volume 3.0
+
+# Use a different voice from voices/ directory
+python speak.py "用别的声音说话" --voice my_voice
+
+# Override reference transcript
+python speak.py "自定义参考文本" --voice my_voice --ref-text "transcript of the reference audio"
 ```
 
-3. 将处理好的音频放到 `voices/reference.wav`
+**Options:**
 
-> 音频质量直接影响克隆效果。选择清晰、无噪音、无 BGM 的片段。
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--volume`, `-v` | Playback volume multiplier | `2.0` |
+| `--voice` | Voice name (filename in `voices/` without `.wav`) | `chihaya_bilibili` |
+| `--ref-text` | Reference transcript (auto-reads from `voices/<name>.txt` if exists) | auto |
 
-## 使用
+**Adding your own voice:** Put a `.wav` file and optional `.txt` transcript in the `voices/` directory. Then use `--voice <name>` to select it.
 
-### Voice Cloning
+---
 
-修改 `speak.py` 或 `clone_test.py` 中的 `ref_text` 为参考音频的实际文本内容，然后：
+## Claude Code Integration
 
-```bash
-# 快速生成并播放
-python speak.py "你好，这是语音克隆测试！"
+You can use `speak.py` as a voice notification for [Claude Code](https://claude.ai/claude-code), so Claude speaks a summary after completing each task.
 
-# 生成并保存到 outputs/
-python clone_test.py
+Add the following to your `~/.claude/CLAUDE.md`:
+
+```markdown
+## Voice Summary (TTS)
+
+Every time you finish a response, as the LAST step, you MUST:
+
+1. Write a one-sentence Chinese summary of what you just did (under 20 characters)
+2. Run this command in background with Bash:
+
+\`\`\`
+/path/to/qwen3-tts-apple-silicon/.venv/bin/python /path/to/qwen3-tts-apple-silicon/speak.py "<summary>" &
+\`\`\`
+
+Rules:
+- Run the command with `run_in_background: true` so it doesn't block the response
+- The speak.py call MUST be the absolute last thing in your response
 ```
 
-### CustomVoice
+This gives you an audio cue every time Claude finishes a task - useful when multitasking or listening to music.
 
-不需要参考音频，使用预设声音：
+---
 
-```bash
-python custom_test.py
-```
+## Tips
 
-可在脚本中修改 `voice`（预设声音）、`instruct`（风格指令）、`lang_code`（语言）等参数。
+- Drag `.txt` files directly into the terminal for long text
+- Voice cloning works best with clean 5-10 second audio clips
+- Speed options: Normal (1.0x), Fast (1.3x), Slow (0.8x)
+- Type `q` or `exit` anytime to go back
 
-## Claude Code 集成
+---
 
-将 TTS 集成到 Claude Code，实现：
-- 每次任务完成后，Claude 自动用克隆的声音播报摘要
-- 权限确认时播放提示音
-- 通知时播放提示音
+## Requirements
 
-### 配置步骤
+- macOS with Apple Silicon (M1/M2/M3/M4)
+- Python 3.10+
+- RAM: ~3GB for Lite models, ~6GB for Pro models
 
-1. **生成提示音频**：先用 `clone_test.py` 生成需要的提示音（修改 `text` 内容），保存到 `outputs/`
+---
 
-2. **配置 `~/.claude/settings.json`**：参考 `claude-code/settings.json`，将 `<YOUR_VENV_PATH>` 和 `<YOUR_PROJECT_PATH>` 替换为实际路径
+## Troubleshooting
 
-3. **配置 `~/.claude/CLAUDE.md`**：参考 `claude-code/CLAUDE.md`，同样替换路径占位符
+| Issue | Fix |
+|-------|-----|
+| `mlx_audio not found` | Run `source .venv/bin/activate` first |
+| `Model not found` | Check model folder names match exactly |
+| Audio won't play | Check macOS sound output settings |
 
-### 示例配置
+---
 
-```json
-{
-  "permissions": {
-    "allow": [
-      "Bash(/path/to/qwen3-tts-voice-clone/.venv/bin/python /path/to/qwen3-tts-voice-clone/speak.py:*)"
-    ]
-  },
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "afplay /path/to/qwen3-tts-voice-clone/outputs/notification.wav &",
-            "async": true
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+## Related Projects
 
-## 项目结构
+- [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) - Original Qwen3-TTS by Alibaba
+- [MLX Audio](https://github.com/Blaizzy/mlx-audio) - MLX framework for audio models
+- [MLX Community](https://huggingface.co/mlx-community) - Pre-converted MLX models
 
-```
-qwen3-tts-voice-clone/
-├── speak.py            # 核心 TTS 脚本（Claude Code 调用）
-├── clone_test.py       # Voice Cloning 测试
-├── custom_test.py      # CustomVoice 测试
-├── requirements.txt    # Python 依赖
-├── voices/             # 参考音频（.wav，不含在仓库中）
-├── outputs/            # 生成的音频（不含在仓库中）
-├── models/             # 模型文件（不含在仓库中）
-└── claude-code/        # Claude Code 配置示例
-    ├── settings.json
-    └── CLAUDE.md
-```
 
-## 致谢
+---
 
-- [kapi2800/qwen3-tts-apple-silicon](https://github.com/kapi2800/qwen3-tts-apple-silicon) — 本项目基于此项目
-- [Qwen/Qwen3-TTS](https://huggingface.co/Qwen/Qwen3-TTS) — 阿里通义千问 TTS 模型
-- [Blaizzy/mlx-audio](https://github.com/Blaizzy/mlx-audio) — MLX 音频框架
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — Anthropic CLI 工具
+**If this project helped you, please give it a ⭐ star!**
