@@ -21,7 +21,7 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/qwen3-tts-voice-clone.git
+git clone https://github.com/onecoinbuybus/qwen3-tts-voice-clone.git
 cd qwen3-tts-voice-clone
 ```
 
